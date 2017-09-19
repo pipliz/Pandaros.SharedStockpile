@@ -1,0 +1,8 @@
+{
+	"assemblies" : [
+    {
+      "path": "Pandaros.SharedStockpile.dll",
+      "enabled": true
+    }
+	]
+}
