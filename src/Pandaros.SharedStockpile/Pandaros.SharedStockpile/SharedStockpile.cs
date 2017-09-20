@@ -17,14 +17,14 @@ namespace Pandaros.SharedStockpile
         static ConbminedConfig _stock = new ConbminedConfig();
         static bool _processing = true;
         
-        [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "AfterStartup")]
+        [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "Pandaros.SharedStockpile.AfterStartup")]
         public static void AfterStartup()
         {
             Log("Active.");
             LoadCounts();
         }
 
-        [ModLoader.ModCallback(ModLoader.EModCallbackType.AfterWorldLoad, "AfterWorldLoad")]
+        [ModLoader.ModCallback(ModLoader.EModCallbackType.AfterWorldLoad, "Pandaros.SharedStockpile.AfterWorldLoad")]
         public static void AfterWorldLoad()
         {
             Log("World Detected: " + ServerManager.WorldName);
@@ -35,7 +35,7 @@ namespace Pandaros.SharedStockpile
             _processing = false;
         }
 
-        [ModLoader.ModCallback(ModLoader.EModCallbackType.OnUpdate, "OnUpdate")]
+        [ModLoader.ModCallback(ModLoader.EModCallbackType.OnUpdate, "Pandaros.SharedStockpile.OnUpdate")]
         public static void OnUpdate()
         {
             Process();
