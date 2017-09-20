@@ -11,27 +11,39 @@ namespace Pandaros.SharedStockpile
     [ModLoader.ModManager]
     public class SharedStockpile
     {
-        const string CONFIG_PATH = "gamedata/mods/Pandaros.SharedStockpile/config.xml";
+        const string CONFIG_PATH = "gamedata/mods/Pandaros/SharedStockpile/config.xml";
 
-        static XmlSerializer _xmlserializer = new XmlSerializer(typeof(CombinedStock));
+        static XmlSerializer _xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
         static Dictionary<int, int> _totalCount = new Dictionary<int, int>();
-        static CombinedStock _stock = new CombinedStock();
-        static bool _processing = false;
+        static ConbminedConfig _stock = new ConbminedConfig();
+        static bool _processing = true;
 
-        [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "AfterStartup"), ModLoader.ModCallbackDependsOnAttribute("colonyapi.initialise")]
+        [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "AfterStartup")]
         public static void AfterStartup()
         {
+            Log("Active.");
             LoadCounts();
         }
 
-        [ModLoader.ModCallback(ModLoader.EModCallbackType.OnFixedUpdate, "FixedUpdate")]
-        public static void FixedUpdate()
+        [ModLoader.ModCallback(ModLoader.EModCallbackType.AfterWorldLoad, "AfterWorldLoad")]
+        public static void AfterWorldLoad()
         {
-            Process();
+            Log("World Detected: " + ServerManager.WorldName);
+
+            if (_stock == null)
+                _stock = new ConbminedConfig();
+
+            if (_stock.Stockpiles == null)
+                _stock.Stockpiles = new Dictionary<string, CombinedStock>();
+
+            if (!_stock.Stockpiles.ContainsKey(ServerManager.WorldName))
+                _stock.Stockpiles.Add(ServerManager.WorldName, new CombinedStock());
+
+            _processing = false;
         }
 
-        [ModLoader.ModCallback(ModLoader.EModCallbackType.OnPlayerMoved, "OnPlayerMoved")]
-        public static void OnPlayerMoved(Players.Player p)
+        [ModLoader.ModCallback(ModLoader.EModCallbackType.OnUpdate, "OnUpdate")]
+        public static void OnUpdate()
         {
             Process();
         }
@@ -40,15 +52,15 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                if (!_processing && Players.CountConnected > 1)
+                if (!_processing && !string.IsNullOrEmpty(ServerManager.WorldName) && Players.CountConnected > 1)
                 {
                     _processing = true;
 
                     if (_stock == null)
-                        _stock = new CombinedStock();
+                        _stock = new ConbminedConfig();
 
                     Dictionary<ushort, int> counts = new Dictionary<ushort, int>();
-                    Dictionary<ushort, int> original = new Dictionary<ushort, int>(_stock.ItemCounts);
+                    Dictionary<ushort, int> original = new Dictionary<ushort, int>(_stock.Stockpiles[ServerManager.WorldName].ItemCounts);
 
                     for (int p = 0; p < Players.CountConnected; p++)
                     {
@@ -65,7 +77,7 @@ namespace Pandaros.SharedStockpile
                                     counts.Add(i, current);
                                 else if (counts[i] != current)
                                 {
-                                    if (original.ContainsKey(i) && _stock.Players.Contains(player.Name))
+                                    if (original.ContainsKey(i) && _stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
                                     {
                                         var diff = original[i] - current;
                                         counts[i] += diff;
@@ -82,14 +94,13 @@ namespace Pandaros.SharedStockpile
                         }
                     }
 
-
                     for (int p = 0; p < Players.CountConnected; p++)
                     {
                         var player = Players.GetConnectedByIndex(p);
                         var stock = Stockpile.GetStockPile(player);
 
-                        if (!_stock.Players.Contains(player.Name))
-                            _stock.Players.Add(player.Name);
+                        if (!_stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
+                            _stock.Stockpiles[ServerManager.WorldName].Players.Add(player.Name);
 
                         foreach (var item in counts)
                         {
@@ -97,18 +108,18 @@ namespace Pandaros.SharedStockpile
 
                             if (current != item.Value)
                             {
-                                var diffInStock = current - item.Value;
+                                var diffInStock = item.Value - current;
 
                                 if (diffInStock > 0)
                                     stock.Add(item.Key, diffInStock);
                                 else
                                     stock.Remove(item.Key, diffInStock * -1);
                             }
-             
+
                         }
                     }
 
-                    _stock.ItemCounts = counts;
+                    _stock.Stockpiles[ServerManager.WorldName].ItemCounts = counts;
 
                     SaveCounts();
                     _processing = false;
@@ -127,7 +138,7 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                var xmlserializer = new XmlSerializer(typeof(CombinedStock));
+                var xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
                 var stringWriter = new StringWriter();
 
                 using (var writer = XmlWriter.Create(stringWriter))
@@ -151,18 +162,55 @@ namespace Pandaros.SharedStockpile
             {
                 if (File.Exists(CONFIG_PATH))
                 using (StreamReader reader = new StreamReader(CONFIG_PATH))
-                    _stock = (CombinedStock)_xmlserializer.Deserialize(reader);
+                    _stock = (ConbminedConfig)_xmlserializer.Deserialize(reader);
+
+                Log("Stock Loaded from Config file.");
             }
             catch (Exception ex)
             {
                 ServerLog.LogAsyncExceptionMessage(new Pipliz.LogExceptionMessage("LoadCounts", ex));
             }
         }
+
+        private static void Log(string message)
+        {
+            ServerLog.LogAsyncMessage(new Pipliz.LogMessage(string.Format("[{0}]<Pandaros => SharedStockpile> {1}", DateTime.Now, message), UnityEngine.LogType.Log));
+        }
+    }
+
+    [Serializable]
+    public class ConbminedConfig
+    {
+        [XmlIgnore]
+        public Dictionary<string, CombinedStock> Stockpiles { get; set; }
+
+        [XmlElement("Stockpiles")]
+        public List<KeyValuePair<string, CombinedStock>> XMLStockpilesProxy
+        {
+            get
+            {
+                return new List<KeyValuePair<string, CombinedStock>>(Stockpiles);
+            }
+            set
+            {
+                Stockpiles = new Dictionary<string, CombinedStock>();
+
+                foreach (var pair in value)
+                    Stockpiles[pair.Key] = pair.Value;
+            }
+        }
+
+        public ConbminedConfig()
+        {
+            Stockpiles = new Dictionary<string, CombinedStock>();
+        }
     }
 
     [Serializable]
     public class CombinedStock
     {
+        [XmlElement]
+        public string World { get; set; }
         [XmlElement]
         public List<string> Players { get; set; }
 
