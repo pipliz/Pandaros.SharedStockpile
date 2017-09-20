@@ -13,11 +13,10 @@ namespace Pandaros.SharedStockpile
     {
         const string CONFIG_PATH = "gamedata/mods/Pandaros/SharedStockpile/config.xml";
 
-        static XmlSerializer _xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
         static Dictionary<int, int> _totalCount = new Dictionary<int, int>();
         static ConbminedConfig _stock = new ConbminedConfig();
         static bool _processing = true;
-
+        
         [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "AfterStartup")]
         public static void AfterStartup()
         {
@@ -29,12 +28,6 @@ namespace Pandaros.SharedStockpile
         public static void AfterWorldLoad()
         {
             Log("World Detected: " + ServerManager.WorldName);
-
-            if (_stock == null)
-                _stock = new ConbminedConfig();
-
-            if (_stock.Stockpiles == null)
-                _stock.Stockpiles = new Dictionary<string, CombinedStock>();
 
             if (!_stock.Stockpiles.ContainsKey(ServerManager.WorldName))
                 _stock.Stockpiles.Add(ServerManager.WorldName, new CombinedStock());
@@ -52,14 +45,11 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                if (!_processing && !string.IsNullOrEmpty(ServerManager.WorldName) && Players.CountConnected > 1)
+                if (!_processing && !string.IsNullOrEmpty(ServerManager.WorldName))
                 {
                     _processing = true;
 
-                    if (_stock == null)
-                        _stock = new ConbminedConfig();
-
-                    Dictionary<ushort, int> counts = new Dictionary<ushort, int>();
+                    SerializableDictionary<ushort, int> counts = new SerializableDictionary<ushort, int>();
                     Dictionary<ushort, int> original = new Dictionary<ushort, int>(_stock.Stockpiles[ServerManager.WorldName].ItemCounts);
 
                     for (int p = 0; p < Players.CountConnected; p++)
@@ -138,9 +128,9 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                var xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
                 var stringWriter = new StringWriter();
 
+                XmlSerializer xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
                 using (var writer = XmlWriter.Create(stringWriter))
                 {
                     xmlserializer.Serialize(writer, _stock);
@@ -160,11 +150,43 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                if (File.Exists(CONFIG_PATH))
-                using (StreamReader reader = new StreamReader(CONFIG_PATH))
-                    _stock = (ConbminedConfig)_xmlserializer.Deserialize(reader);
+                Log("Loading from Config file from " + CONFIG_PATH);
 
-                Log("Stock Loaded from Config file.");
+                if (File.Exists(CONFIG_PATH))
+                {
+                    XmlSerializer xmlserializer = new XmlSerializer(typeof(ConbminedConfig));
+                    using (StreamReader reader = new StreamReader(CONFIG_PATH))
+                        _stock = (ConbminedConfig)xmlserializer.Deserialize(reader);
+                }
+                else
+                    Log("Unable to find existing config file. Creating new file.");
+
+                if (_stock == null)
+                {
+                    Log("Failed to load stock from config file.");
+
+                    if (_stock == null)
+                        _stock = new ConbminedConfig();
+
+                    if (_stock.Stockpiles == null)
+                        _stock.Stockpiles = new SerializableDictionary<string, CombinedStock>();
+                }
+                else
+                {
+                    Log("Stock Loaded from Config file.");
+
+                    foreach (var pile in _stock.Stockpiles)
+                    {
+                        Log("World: " + pile.Value.World);
+
+                        var players = string.Empty;
+
+                        foreach (var p in pile.Value.Players)
+                            players += " " + p;
+
+                        Log("Indexed Players: " + players);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -181,28 +203,12 @@ namespace Pandaros.SharedStockpile
     [Serializable]
     public class ConbminedConfig
     {
-        [XmlIgnore]
-        public Dictionary<string, CombinedStock> Stockpiles { get; set; }
-
-        [XmlElement("Stockpiles")]
-        public List<KeyValuePair<string, CombinedStock>> XMLStockpilesProxy
-        {
-            get
-            {
-                return new List<KeyValuePair<string, CombinedStock>>(Stockpiles);
-            }
-            set
-            {
-                Stockpiles = new Dictionary<string, CombinedStock>();
-
-                foreach (var pair in value)
-                    Stockpiles[pair.Key] = pair.Value;
-            }
-        }
+        [XmlElement]
+        public SerializableDictionary<string, CombinedStock> Stockpiles { get; set; }
 
         public ConbminedConfig()
         {
-            Stockpiles = new Dictionary<string, CombinedStock>();
+            Stockpiles = new SerializableDictionary<string, CombinedStock>();
         }
     }
 
@@ -213,30 +219,78 @@ namespace Pandaros.SharedStockpile
         public string World { get; set; }
         [XmlElement]
         public List<string> Players { get; set; }
-
-        [XmlElement("ItemCounts")]
-        public List<KeyValuePair<ushort, int>> XMLItemCountsProxy
-        {
-            get
-            {
-                return new List<KeyValuePair<ushort, int>>(ItemCounts);
-            }
-            set
-            {
-                ItemCounts = new Dictionary<ushort, int>();
-
-                foreach (var pair in value)
-                    ItemCounts[pair.Key] = pair.Value;
-            }
-        }
-
-        [XmlIgnore]
-        public Dictionary<ushort, int> ItemCounts { get; set; }
+        [XmlElement]
+        public SerializableDictionary<ushort, int> ItemCounts { get; set; }
 
         public CombinedStock()
         {
             Players = new List<string>();
-            ItemCounts = new Dictionary<ushort, int>();
+            ItemCounts = new SerializableDictionary<ushort, int>();
         }
+    }
+
+    [XmlRoot("dictionary")]
+    public class SerializableDictionary<TKey, TValue>
+        : Dictionary<TKey, TValue>, IXmlSerializable
+    {
+        #region IXmlSerializable Members
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(System.Xml.XmlReader reader)
+        {
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+
+            bool wasEmpty = reader.IsEmptyElement;
+            reader.Read();
+
+            if (wasEmpty)
+                return;
+
+            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            {
+                reader.ReadStartElement("item");
+
+                reader.ReadStartElement("key");
+                TKey key = (TKey)keySerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                reader.ReadStartElement("value");
+                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                reader.ReadEndElement();
+
+                this.Add(key, value);
+
+                reader.ReadEndElement();
+                reader.MoveToContent();
+            }
+            reader.ReadEndElement();
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer)
+        {
+            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+
+            foreach (TKey key in this.Keys)
+            {
+                writer.WriteStartElement("item");
+
+                writer.WriteStartElement("key");
+                keySerializer.Serialize(writer, key);
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("value");
+                TValue value = this[key];
+                valueSerializer.Serialize(writer, value);
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+            }
+        }
+        #endregion
     }
 }
