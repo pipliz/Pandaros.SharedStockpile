@@ -16,7 +16,8 @@ namespace Pandaros.SharedStockpile
         static Dictionary<int, int> _totalCount = new Dictionary<int, int>();
         static ConbminedConfig _stock = new ConbminedConfig();
         static bool _processing = true;
-        
+        static DateTime _nextProc = DateTime.MinValue;
+
         [ModLoader.ModCallbackAttribute(ModLoader.EModCallbackType.AfterStartup, "Pandaros.SharedStockpile.AfterStartup")]
         public static void AfterStartup()
         {
@@ -45,7 +46,7 @@ namespace Pandaros.SharedStockpile
         {
             try
             {
-                if (!_processing && !string.IsNullOrEmpty(ServerManager.WorldName))
+                if (!_processing && !string.IsNullOrEmpty(ServerManager.WorldName) && DateTime.UtcNow > _nextProc)
                 {
                     _processing = true;
 
@@ -55,37 +56,34 @@ namespace Pandaros.SharedStockpile
                     for (int p = 0; p < Players.CountConnected; p++)
                     {
                         var player = Players.GetConnectedByIndex(p);
+                        var stock = Stockpile.GetStockPile(player);
 
-                        if (player.IsConnected)
+                        for (ushort i = 0; i < ItemTypes.IndexLookup.MaxRegistered; i++)
                         {
-                            var stock = Stockpile.GetStockPile(player);
-
-                            for (ushort i = 0; i < ItemTypes.IndexLookup.MaxRegistered; i++)
+                            if (stock.Contains(i))
                             {
-                                if (stock.Contains(i))
+                                var current = stock.AmountContained(i);
+
+                                if (!counts.ContainsKey(i))
+                                    counts.Add(i, current);
+                                else if (counts[i] != current)
                                 {
-                                    var current = stock.AmountContained(i);
-
-                                    if (!counts.ContainsKey(i))
-                                        counts.Add(i, current);
-                                    else if (counts[i] != current)
+                                    if (original.ContainsKey(i) && _stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
                                     {
-                                        if (original.ContainsKey(i) && _stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
-                                        {
-                                            var diff = original[i] - current;
-                                            counts[i] += diff;
+                                        var diff = original[i] - current;
+                                        counts[i] += diff;
 
-                                            if (counts[i] < 0)
-                                                counts[i] = 0;
-                                        }
-                                        else
-                                        {
-                                            counts[i] += current;
-                                        }
+                                        if (counts[i] < 0)
+                                            counts[i] = 0;
+                                    }
+                                    else
+                                    {
+                                        counts[i] += current;
                                     }
                                 }
                             }
                         }
+                        
                     }
 
                     for (int p = 0; p < Players.CountConnected; p++)
@@ -93,8 +91,8 @@ namespace Pandaros.SharedStockpile
                         var player = Players.GetConnectedByIndex(p);
                         var stock = Stockpile.GetStockPile(player);
 
-                        if (!_stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
-                            _stock.Stockpiles[ServerManager.WorldName].Players.Add(player.Name);
+                        if (!_stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.ID.ToString()))
+                            _stock.Stockpiles[ServerManager.WorldName].Players.Add(player.ID.ToString());
 
                         foreach (var item in counts)
                         {
@@ -117,6 +115,7 @@ namespace Pandaros.SharedStockpile
 
                     SaveCounts();
                     _processing = false;
+                    _nextProc = DateTime.UtcNow + TimeSpan.FromSeconds(1);
                 }
             }
             catch (Exception ex)
