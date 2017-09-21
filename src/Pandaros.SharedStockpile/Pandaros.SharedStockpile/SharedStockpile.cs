@@ -55,29 +55,33 @@ namespace Pandaros.SharedStockpile
                     for (int p = 0; p < Players.CountConnected; p++)
                     {
                         var player = Players.GetConnectedByIndex(p);
-                        var stock = Stockpile.GetStockPile(player);
 
-                        for (ushort i = 0; i < ItemTypes.IndexLookup.MaxRegistered; i++)
+                        if (player.IsConnected)
                         {
-                            if (stock.Contains(i))
+                            var stock = Stockpile.GetStockPile(player);
+
+                            for (ushort i = 0; i < ItemTypes.IndexLookup.MaxRegistered; i++)
                             {
-                                var current = stock.AmountContained(i);
-
-                                if (!counts.ContainsKey(i))
-                                    counts.Add(i, current);
-                                else if (counts[i] != current)
+                                if (stock.Contains(i))
                                 {
-                                    if (original.ContainsKey(i) && _stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
-                                    {
-                                        var diff = original[i] - current;
-                                        counts[i] += diff;
+                                    var current = stock.AmountContained(i);
 
-                                        if (counts[i] < 0)
-                                            counts[i] = 0;
-                                    }
-                                    else
+                                    if (!counts.ContainsKey(i))
+                                        counts.Add(i, current);
+                                    else if (counts[i] != current)
                                     {
-                                        counts[i] += current;
+                                        if (original.ContainsKey(i) && _stock.Stockpiles[ServerManager.WorldName].Players.Contains(player.Name))
+                                        {
+                                            var diff = original[i] - current;
+                                            counts[i] += diff;
+
+                                            if (counts[i] < 0)
+                                                counts[i] = 0;
+                                        }
+                                        else
+                                        {
+                                            counts[i] += current;
+                                        }
                                     }
                                 }
                             }

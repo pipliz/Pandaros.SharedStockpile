@@ -1,0 +1,15 @@
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\modInfo.json
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\Pandaros.SharedStockpile.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\Pandaros.SharedStockpile.pdb
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\APIProvider.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\Assembly-CSharp.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\UnityEngine.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\UnityEngine.UI.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\Open.Nat.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\System.Threading.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Debug\APIProvider.pdb
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Debug\Pandaros.SharedStockpile.csprojResolveAssemblyReference.cache
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Debug\Pandaros.SharedStockpile.csproj.CoreCompileInputs.cache
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Debug\Pandaros.SharedStockpile.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Debug\Pandaros.SharedStockpile.pdb

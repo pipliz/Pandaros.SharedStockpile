@@ -1,0 +1,15 @@
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\modInfo.json
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Pandaros.SharedStockpile.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Pandaros.SharedStockpile.pdb
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\APIProvider.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Assembly-CSharp.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\UnityEngine.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\UnityEngine.UI.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\ICSharpCode.SharpZipLib.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Open.Nat.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\System.Threading.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\APIProvider.pdb
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.csproj.CoreCompileInputs.cache
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.dll
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.pdb
+C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.csprojResolveAssemblyReference.cache
