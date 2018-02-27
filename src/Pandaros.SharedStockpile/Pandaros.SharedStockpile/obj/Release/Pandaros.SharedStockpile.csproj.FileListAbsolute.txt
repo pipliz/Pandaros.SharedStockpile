@@ -13,3 +13,16 @@ C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpil
 C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.dll
 C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.pdb
 C:\Users\JBurl\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.csprojResolveAssemblyReference.cache
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\modInfo.json
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Pandaros.SharedStockpile.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Pandaros.SharedStockpile.pdb
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.csproj.CoreCompileInputs.cache
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\obj\Release\Pandaros.SharedStockpile.pdb
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Assembly-CSharp.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\ICSharpCode.SharpZipLib.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\Open.Nat.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\System.Threading.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\UnityEngine.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\UnityEngine.Networking.dll
+E:\Source\Repos\Pandaros.SharedStockpile\src\Pandaros.SharedStockpile\Pandaros.SharedStockpile\bin\Release\UnityEngine.UI.dll

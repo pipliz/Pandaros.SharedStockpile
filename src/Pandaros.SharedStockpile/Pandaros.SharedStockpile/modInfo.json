@@ -1,16 +1,11 @@
-{
-	"assemblies" : [
+[
     {
-      "path": "Pandaros.SharedStockpile.dll",
+      "dllpath": "Pandaros.SharedStockpile.dll",
       "name": "Shared Stockpile",
+      "version": "0.13.0.0",
       "enabled": true,
       "compatibleversions": [
-        {
-          "Major": 0,
-          "Minor": 4,
-          "Build": 0
-        }
+        "0.5.3"
       ]
     }
-	]
-}
+]
