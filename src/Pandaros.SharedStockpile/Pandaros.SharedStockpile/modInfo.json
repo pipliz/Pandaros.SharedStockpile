@@ -5,7 +5,8 @@
       "version": "0.13.0.0",
       "enabled": true,
       "compatibleversions": [
-        "0.5.3"
+        "0.5.3",
+        "0.6.0"
       ]
     }
 ]
